@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Live Feedback</title>
+  <link rel="icon" href="https://upload.wikimedia.org/wikipedia/en/2/25/Logo_ifm-group_RGB.svg" type="image/svg+xml">
+  <style>
+    body {
+      background: orange;
+      color: black;
+      font-family: "Times New Roman", Times, serif;
+      text-align: center;
+      margin: 0;
+      padding: 0;
+    }
+
+    h1 {
+      margin: 20px 0;
+    }
+
+    .carousel-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 85vh;
+      overflow: hidden;
+    }
+
+    .carousel {
+      position: relative;
+      width: 80vw;
+      height: 70vh;
+    }
+
+    .carousel img {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      max-height: 70vh;
+      transform: translate(-50%, -50%) scale(0.7);
+      opacity: 0.5;
+      filter: blur(3px);
+      transition: all 1s ease-in-out;
+      border: 5px solid white;
+      border-radius: 20px;
+      box-shadow: 0 0 20px black;
+      z-index: 0;
+    }
+
+    .carousel img.center {
+      transform: translate(-50%, -50%) scale(1);
+      opacity: 1;
+      filter: blur(0);
+      z-index: 2;
+    }
+
+    .carousel img.left,
+    .carousel img.right {
+      opacity: 1;
+      filter: blur(1px);
+    }
+
+    .carousel img.left {
+      transform: translate(-150%, -50%) scale(0.7);
+      z-index: 1;
+    }
+
+    .carousel img.right {
+      transform: translate(50%, -50%) scale(0.7);
+      z-index: 1;
+    }
+  </style>
+</head>
+<body>
+  <h1>Team Nimbus + Adaptable Dashboard Feedbacks</h1>
+  <div class="carousel-container">
+    <div class="carousel" id="carousel">
+      {% for url in file_urls %}
+        <img src="{{ url }}" alt="Feedback Image" data-url="{{ url }}">
+      {% endfor %}
+    </div>
+  </div>
+
+  <script>
+    let images = Array.from(document.querySelectorAll("#carousel img"));
+    let index = 0;
+
+    function updateCarousel() {
+      const total = images.length;
+      const prev = (index - 1 + total) % total;
+      const curr = index % total;
+      const next = (index + 1) % total;
+
+      images.forEach(img => img.classList.remove("left", "center", "right"));
+      if (images[prev]) images[prev].classList.add("left");
+      if (images[curr]) images[curr].classList.add("center");
+      if (images[next]) images[next].classList.add("right");
+    }
+
+    updateCarousel();
+
+    setInterval(() => {
+      index = (index + 1) % images.length;
+      updateCarousel();
+    }, 15000);
+
+    // SSE listener for new image
+    const evtSource = new EventSource("/events");
+    evtSource.onmessage = function (e) {
+      const newUrl = e.data;
+      if (!images.some(img => img.dataset.url === newUrl)){
+        const newImg = document.createElement("img");
+        newImg.src = newUrl;
+        newImg.alt = "Feedback Image";
+        newImg.setAttribute("data-url", newUrl);
+        document.getElementById("carousel").prepend(newImg);
+        images.unshift(newImg);
+        index = 0; // show new image in center
+        updateCarousel();
+      }
+    };
+  </script>
+</body>
+</html>

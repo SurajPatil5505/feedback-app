@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <title>Team Nimbus Feedback</title>
+  <link rel="icon" href="https://upload.wikimedia.org/wikipedia/en/2/25/Logo_ifm-group_RGB.svg" type="image/svg+xml">
+  <style>
+    body {
+      font-family: "Segoe UI", sans-serif;
+      background: linear-gradient(to right, #6dd5fa, #2980b9);
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      color: #333;
+    }
+
+    .container {
+      background: #666666;
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+      width: 90%;
+      max-width: 480px;
+      text-align: center;
+      font-family: "Times New Roman", Times, serif;
+      box-sizing: border-box;
+    }
+
+    .team-title {
+      font-size: 40px;
+      font-weight: bold;
+      background: none;
+      color: white;
+      margin: 15px 0 5px;
+    }
+
+    .logo {
+      width: 70px;
+      margin-bottom: 15px;
+    }
+
+    h2 {
+      font-size: 27px;
+      margin: 5px 0 15px;
+      font-weight: bold;
+      color: white;
+      font-family: "Times New Roman", Times, serif;
+    }
+
+    input[type="text"],
+    textarea {
+      width: 92%;
+      padding: 8px;
+      margin: 6px auto;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 14px;
+      display: block;
+      font-family: "Times New Roman", Times, serif;
+    }
+
+    input::placeholder,
+    textarea::placeholder {
+      color: black;
+    }
+
+    video,
+    canvas {
+      width: 100%;
+      height: 150px;
+      border-radius: 12px;
+      margin: 10px 0;
+      object-fit: cover;
+    }
+
+    canvas {
+      display: none;
+    }
+
+    .btn-group {
+      display: flex;
+      justify-content: space-between;
+      margin-top: 8px;
+    }
+
+    .capture-btn,
+    .submit-btn {
+      width: 48%;
+      padding: 8px;
+      font-weight: bold;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 14px;
+      font-family: "Times New Roman", Times, serif;
+    }
+
+    .capture-btn {
+      background-color: orange;
+      color: white;
+    }
+
+    .submit-btn {
+      background-color: #28a745;
+      color: white;
+    }
+
+    .toast {
+      visibility: hidden;
+      min-width: 180px;
+      background-color: #48FF00;
+      color: black;
+      font-family: 'Times New Roman', Times, serif;
+      text-align: center;
+      border-radius: 6px;
+      padding: 12px;
+      position: fixed;
+      z-index: 100;
+      left: 50%;
+      bottom: 30px;
+      transform: translateX(-50%);
+      opacity: 0;
+      transition: opacity 0.5s ease, visibility 0.5s;
+    }
+
+    .toast.show {
+      visibility: visible;
+      opacity: 0.9;
+    }
+
+    .footer {
+      font-size: 12px;
+      color: white;
+      margin-top: 12px;
+      font-family: "Times New Roman", Times, serif;
+    }
+
+    /* Heart Toast */
+    .heart-toast {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      width: 380px;
+      height: 360px;
+      transform: translate(-50%, -50%) scale(0);
+      background-color: orange;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-direction: column;
+      color: black;
+      font-family: 'Times New Roman', Times, serif;
+      font-weight: bold;
+      z-index: 9999;
+      clip-path: path("M190 340 Q160 300 120 260 Q70 200 90 130 Q110 60 170 80 Q190 100 200 130 Q210 100 230 80 Q290 60 310 130 Q330 200 280 260 Q240 300 210 340 Z");
+      text-align: center;
+      font-size: 28px;
+      line-height: 1.4;
+      white-space: normal;
+      word-wrap: break-word;
+      opacity: 0;
+      animation: none;
+      padding: 30px;
+    }
+
+    .heart-toast-content {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      width: 100%;
+      height: 100%;
+      line-height: 1.4;
+      font-size: 25px;
+      font-weight: bold;
+      padding: 0 20px;
+    }
+
+    #user-name-line {
+      font-size: 23px !important;
+    }
+
+    @keyframes popInOut {
+      0% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+      }
+
+      15% {
+        transform: translate(-50%, -50%) scale(1.1);
+        opacity: 1;
+      }
+
+      30% {
+        transform: translate(-50%, -50%) scale(1);
+      }
+
+      85% {
+        opacity: 1;
+      }
+
+      100% {
+        transform: translate(-50%, -50%) scale(0);
+        opacity: 0;
+      }
+    }
+
+    /* Responsive styles */
+    @media screen and (min-width: 768px) {
+      .container {
+        max-width: 600px;
+        padding: 2.5rem;
+      }
+
+      .team-title {
+        font-size: 48px;
+      }
+
+      h2 {
+        font-size: 32px;
+      }
+
+      input[type="text"],
+      textarea {
+        font-size: 16px;
+      }
+
+      .capture-btn,
+      .submit-btn {
+        font-size: 16px;
+        padding: 10px;
+      }
+
+      video,
+      canvas {
+        height: 200px;
+      }
+
+      .footer {
+        font-size: 14px;
+      }
+
+      #user-name-line {
+        font-size: 30px !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <div class="team-title">Team Nimbus</div>
+    <img
+      src="https://upload.wikimedia.org/wikipedia/en/thumb/2/25/Logo_ifm-group_RGB.svg/512px-Logo_ifm-group_RGB.svg.png"
+      alt="IFM Logo" class="logo">
+    <h2>Leave Your Feedback</h2>
+    <form id="feedback-form">
+      <input type="text" name="name" placeholder="Your Name" required>
+      <textarea name="feedback" placeholder="Your Feedback" rows="3" required></textarea>
+
+      <video id="video" autoplay muted></video>
+      <canvas id="canvas"></canvas>
+      <input type="hidden" name="image_data" id="image_data">
+
+      <div class="btn-group">
+        <button type="button" onclick="capturePhoto()" class="capture-btn">📸 Capture</button>
+        <button type="submit" class="submit-btn">Submit</button>
+      </div>
+    </form>
+    <div class="footer">Built with 🧡 by Team Nimbus & Powered by ifm</div>
+  </div>
+
+  <!-- Toast notification -->
+  <div id="toast" class="toast">📸 Photo captured!</div>
+
+  <!-- Heart Pop-Up -->
+  <div id="heart-toast" class="heart-toast">
+    <div class="heart-toast-content">
+      <div>Thank you</div>
+      <div id="user-name-line"></div>
+    </div>
+  </div>
+
+  <script>
+  const video = document.getElementById('video'),
+    canvas = document.getElementById('canvas'),
+    imageData = document.getElementById('image_data'),
+    toast = document.getElementById('toast'),
+    heartToast = document.getElementById('heart-toast'),
+    userNameLine = document.getElementById('user-name-line'),
+    form = document.querySelector('form'),
+    captureBtn = document.querySelector('.capture-btn');
+
+  let stream = null;
+  let isCaptured = false;
+
+  function startCamera() {
+    navigator.mediaDevices.getUserMedia({ video: true })
+      .then(s => {
+        stream = s;
+        video.srcObject = stream;
+        video.play();
+        video.style.display = 'block';
+        canvas.style.display = 'none';
+      })
+      .catch(() => showToast("Camera not available."));
+  }
+
+  startCamera();
+
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2000);
+  }
+
+  function showHeartToast(name) {
+    userNameLine.textContent = name.trim();
+    heartToast.style.animation = 'none';
+    void heartToast.offsetWidth;
+    heartToast.style.animation = 'popInOut 5s forwards';
+  }
+
+  function capturePhoto() {
+    const name = form.querySelector('input[name="name"]').value.trim();
+    const feedback = form.querySelector('textarea[name="feedback"]').value.trim();
+
+    if (!name || !feedback) {
+      showToast("⚠️ Please fill in your name and feedback first.");
+      return;
+    }
+
+    if (!isCaptured) {
+      // Capture
+      const ctx = canvas.getContext('2d');
+
+      // Match display size
+      canvas.style.width = video.offsetWidth + 'px';
+      canvas.style.height = video.offsetHeight + 'px';
+
+      // Match actual resolution
+      canvas.width = video.videoWidth;
+      canvas.height = video.videoHeight;
+
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      canvas.toBlob(blob => {
+        const reader = new FileReader();
+        reader.onloadend = () => {
+          imageData.value = reader.result;
+          showToast("📸 Photo captured!");
+        };
+        reader.readAsDataURL(blob);
+      }, 'image/jpeg', 0.6);
+
+      // Show frozen canvas, hide video
+      video.style.display = 'none';
+      canvas.style.display = 'block';
+
+      // Change button to "Re-Capture"
+      isCaptured = true;
+      captureBtn.textContent = "🔁 Re-Capture";
+    } else {
+      // Re-Capture
+      video.style.display = 'block';
+      canvas.style.display = 'none';
+      imageData.value = "";
+      isCaptured = false;
+      captureBtn.textContent = "📸 Capture";
+      showToast("🎥 Camera resumed. Capture again.");
+    }
+  }
+
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    const name = form.querySelector('input[name="name"]').value.trim();
+    const feedback = form.querySelector('textarea[name="feedback"]').value.trim();
+    const image = imageData.value;
+
+    if (!image) {
+      showToast("⚠️ Please take a photo first.");
+      return;
+    }
+
+    showHeartToast(name);
+
+    setTimeout(() => {
+      const data = new FormData();
+      data.append("name", name);
+      data.append("feedback", feedback);
+      data.append("image_data", image);
+
+      fetch("/", {
+        method: "POST",
+        body: data
+      })
+        .then(response => {
+          if (response.ok) {
+            showToast("✅ Feedback submitted!");
+            form.reset();
+            imageData.value = "";
+            isCaptured = false;
+            captureBtn.textContent = "📸 Capture";
+            startCamera();
+          } else {
+            showToast("❌ Submission failed.");
+          }
+        })
+        .catch(() => showToast("❌ Network error."));
+    }, 5000);
+  });
+</script>
+</body>
+
+</html>
