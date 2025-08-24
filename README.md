@@ -42,6 +42,7 @@ python app.py
 - Your image is saved to `/static/uploads/`
 - The script creates a beautiful image with your feedback
 - That image + feedback will visible on viewer page in network.
+- To view live feebacks system open `http://localhost:5000/viewer` in another terminal on same system and if we want to view in another system use `http://Ip_address_of_server_pc:5000/viewer` to view live feeback system.
 
 ---
 
